@@ -50,7 +50,7 @@
     
     在Java SE 8中，类型推断的范围显著被放宽，包括嵌套和链式泛型方法调用的推断扩展，和lambda形式的推断。这使得构建用于
     调用链的API变得容易得多，而这样的API(如 Streams)非常流行，这些都已经表明开发者已经习惯推断出中间类型。比如在下面的
-    方法链式调用中：
+    链式调用中：
 ```$xslt
         int maxWeight = blocks.stream()
                       .filter(b -> b.getColor() == BLUE)
