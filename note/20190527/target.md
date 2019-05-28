@@ -118,8 +118,12 @@
 *   x := expr (如 Go)
         
         
-    sdfsdf
-
+    在收集了大量的意见后，var显然比Groovy，C++或Go方法更受欢迎。关于不可变的局部变量的第二种语法格式（val,let），
+    存在着相当多的意见；这将是额外设计中的一种权衡，最后，我们选择了仅支持var。
+   你可以在[这里\\](http://mail.openjdk.java.net/pipermail/platform-jep-discuss/2016-December/000066.html)找到关于
+   基本原理的一些细节
+### 不可见类型
+   
      
     
         
