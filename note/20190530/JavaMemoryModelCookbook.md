@@ -118,6 +118,10 @@
    确保Load1所要读入的数据能够在被Load2和后续的Load指令访问前读入。      
    通常在能够执行预加载指令或支持乱序处理的处理器中需要显示声明LoadLoad屏障，因为在这些处理器中正在等待的Load
    指令能够绕过正在等待的Store指令。      
-   > * StoreStore屏障      
-   > * LoadStore屏障      
+   > * StoreStore屏障     
+   序列：Store1,StoreStore,Store2      
+   确保Store1的数据在Store2以及后续的Store指令操作相关数据之前对其他处理器可见(例如：向主内存刷新数据)。通常
+   情况下，如果处理器不能保证从写缓存或缓存向其他处理器或主内存按照顺序刷新数据，那么它需要使用StoreStore屏障。     
+   > * LoadStore屏障
+         
    > * StoreLoad屏障      
