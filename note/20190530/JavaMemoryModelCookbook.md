@@ -11,7 +11,7 @@
    若CPU是三核处理器，则handler-1可执行b,handler-2执行c,handler-3执行a,
    这样等到b,c都执行完毕的时候,a也正好执行完。相比 a -> b -> c 顺序，提高了CPU的执行效率。
 > 2. **指令重排的问题**        
-   > 如果代码的逻辑之间存在一定的先后顺序，在并行处理的时候就会尝试二义性，不同的执行逻辑，得到不同的结果。        
+   > 如果代码的逻辑之间存在一定的先后顺序，在并行处理的时候就会产生二义性，不同的执行逻辑，得到不同的结果。
    在单线程执行时，这些指令不允许重排： 
          <table>
             <tr>
@@ -30,8 +30,40 @@
                 <td>a=b;b=1</td>
             </tr>
         </table>            
-> 3. **JMM中指令重排的规则**        
-    
+> 3. **JMM中禁止指令重排的规则**        
+   > 主要有两种：对字段(包括数组中的元素)的存取指令(load,store)；对锁(lock)的控制指令。具体指令有：        
+        <ul>
+            <li>
+                Normal Load：对非Volatile字段的读取，getField,getStatic,array load;   
+            </li>
+            <li>
+                Normal Store：对非Volatile字段的存储，putField,putStatic,array store;   
+            </li>
+            <li>
+                Volatile Load：对Volatile字段的读取，getField,getStatic;   
+            </li>
+            <li>
+                Volatile Store：对Volatile字段的存储，putField,putStatic;   
+            </li>
+            <li>
+                MonitorEnters：包括进入同步块Synchronized的方法
+            </li>
+            <li>
+                MonitorExits：包括退出同步块Synchronized的方法
+            </li>
+        </ul>
+        <table>
+            <tr>
+                <th>能否重排</th>
+                <th colspan="3" style="color:red" >第二个操作</th>
+            </tr>
+            <tr>
+                <th>第一个操作</th>
+                <th>Normal Load,Normal Store</th>
+                <th>Volatile Load,MonitorEnter</th>
+                <th>Volatile Store,MonitorEnter</th>
+            </tr>
+        </table>
         
             
     
