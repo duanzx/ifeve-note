@@ -1,4 +1,4 @@
-# [ifeve-ifeve-note][duanzx]
+# [ifeve-note][duanzx]
 并发编程网的译文
 
 | 编号    | 标题                                    

@@ -1,4 +1,4 @@
-### JEP 286: 局部变量类型推断
+### JEP 286: 局部变量类型推断 [原文链接]()
 ```$xslt
     Author	Brian Goetz
     Owner	Dan Smith
