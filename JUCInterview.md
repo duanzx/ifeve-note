@@ -14,6 +14,6 @@
 [duanzx]: https://github.com/duanzx/ifeve-translation
 [001]: https://github.com/duanzx/ifeve-translation/blob/master/note/20190527/target.md
 [002]: https://github.com/duanzx/ifeve-translation/blob/master/note/20190527/target.md
-[003]: https://github.com/duanzx/ifeve-translation/blob/master/note/20190527/JavaMemoryModelCookbook.md
+[003]: https://github.com/duanzx/ifeve-translation/blob/master/note/20190530/JavaMemoryModelCookbook.md
 
      
