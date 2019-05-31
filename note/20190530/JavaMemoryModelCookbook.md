@@ -1,4 +1,4 @@
-### Java内存模型Cookbook阅读笔记 [参考链接](http://ifeve.com/jmm-cookbook/)
+### Java内存模型Cookbook阅读笔记 参考链接：[并发编程网-JMM Cookbook](http://ifeve.com/jmm-cookbook/)
 
 核心思想：说明了在最简单的背景下 **指令重排**、**内存屏障**、**多处理器**等规则在JVM中存在的原因。
 
@@ -55,16 +55,38 @@
         <table>
             <tr>
                 <th>能否重排</th>
-                <th colspan="3" style="color:red" >第二个操作</th>
+                <th colspan="3">第二个操作</th>
             </tr>
             <tr>
                 <th>第一个操作</th>
                 <th>Normal Load,Normal Store</th>
                 <th>Volatile Load,MonitorEnter</th>
-                <th>Volatile Store,MonitorEnter</th>
+                <th>Volatile Store,MonitorExit</th>
+            </tr>
+            <tr>
+                <td>Normal Load,Normal Store</td>
+                <td></td>
+                <td></td>
+                <td>NO</td>
+            </tr>
+            <tr>
+                <td>Volatile Load,MonitorEnter</td>
+                <td>NO</td>
+                <td>NO</td>
+                <td>NO</td>
+            </tr>
+            <tr>
+                <td>Volatile Store,MonitorExit</td>
+                <td></td>
+                <td>NO</td>
+                <td>NO</td>
             </tr>
         </table>
-        
+    提示：上述关于Volitale,Monitor的规则仅仅适用于可能被多线程访问的变量和对象。如果一个编译器可以证明，一个
+    锁只被单线程访问，那么这个锁就可以去掉。如果一个Volitale变量只被单线程访问，这个变量也可以被当作是普通变量。      
+    不能被同一个内存地址上的load指令和之后紧跟着的store指令重排，但是可以被两个不同的内存地址上的load和store
+    指令进行重排。
+> 4. **Final字段的重排规则**    
             
     
 
