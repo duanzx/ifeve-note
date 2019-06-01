@@ -7,9 +7,9 @@
 
 | 编号    | 标题                                    
 | :--- | :--------------------------------------- 
-| 1    | [Java并发结构][001]                           
-| 2    | [任务取消(Cancellation)][002]                           
-| 3    | [Java内存模型Cookbook][003]                           
+| 1    | [JUC基础][001]                           
+| 2    | [JUC进阶][002]                           
+| 3    | [From zhihu][003]                           
 
 [duanzx]: https://github.com/duanzx/ifeve-note
 [001]: https://github.com/duanzx/ifeve-note/blob/master/note/20190527/target.md
