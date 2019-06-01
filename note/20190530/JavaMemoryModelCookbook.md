@@ -123,5 +123,52 @@
    确保Store1的数据在Store2以及后续的Store指令操作相关数据之前对其他处理器可见(例如：向主内存刷新数据)。通常
    情况下，如果处理器不能保证从写缓存或缓存向其他处理器或主内存按照顺序刷新数据，那么它需要使用StoreStore屏障。     
    > * LoadStore屏障
-   序列：S      
-   > * StoreLoad屏障      
+   序列：Load1,LoadStore,Store2        
+   确保Load1的数据在Store2和后续Store指令被刷新之前读取。在 Waiting Store指令可以越过Load指令的处理器桑需要使用
+   LoadStore屏障。      
+   > * StoreLoad屏障
+   序列：Store1,StoreLoad,Load2        
+   确保Store1的数据在被Load2以及后续的Load指令读取之前对其它处理器可见。
+   通常它的开销是最昂贵的。因为它们必须通过关闭 略过缓存直接从写缓存读取数据 的机制。       
+   下面是符合JSR-133的屏障的重排序规则：        
+       <table>
+            <tr>
+                <th>需要的屏障</th>
+                <th colspan="4">第二步</th>
+            </tr>
+            <tr>
+                <td>第一步</td>
+                <td>Normal Load</td>
+                <td>Normal Store</td>
+                <td>Volatile Load,Monitor Enter</td>
+                <td>Volatile Store,Monitor Exit</td>
+            </tr>
+            <tr>
+                <td>Normal Load</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Load Store</td>
+            </tr>
+            <tr>
+                <td>Normal Store</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Store Store</td>
+            </tr>
+            <tr>
+                <td>Volatile Load,Monitor Enter</td>
+                <td>LoadLoad</td>
+                <td>LoadStore</td>
+                <td>LoadLoad</td>
+                <td>LoadStore</td>
+            </tr>
+            <tr>
+                <td>Volatile Store,Monitor Exit</td>
+                <td></td>
+                <td></td>
+                <td>StoreLoad</td>
+                <td>Store Store</td>
+            </tr>
+       </table>      
