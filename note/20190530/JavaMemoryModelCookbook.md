@@ -172,3 +172,41 @@
                 <td>Store Store</td>
             </tr>
        </table>      
+    另外，特殊的final字段规则，在下面代码中需要一个StoreStore屏障      
+    <p>
+        x.finalField = v;              
+        StoreStore;          
+        sharedRef = x;               
+    </p>
+    下面例子解释如何防止屏障：       
+
+```
+        class X {
+            int a, b;
+            volatile int v, u;
+        
+            void f() {
+                int i, j;
+        
+                i = a;// load a
+                j = b;// load b
+                i = v;// load v
+                // LoadLoad
+                j = u;// load u
+                // LoadStore
+                a = i;// store a
+                b = j;// store b
+                // StoreStore
+                v = i;// store v
+                // StoreStore
+                u = j;// store u
+                // StoreLoad
+                i = u;// load u
+                // LoadLoad
+                // LoadStore
+                j = b;// load b
+                a = i;// store a
+            }
+        }
+ ```
+ > 4. **数据依赖和屏障**           
