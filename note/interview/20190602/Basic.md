@@ -1,12 +1,40 @@
 ### [Java并发面试题-基础](http://ifeve.com/javaconcurrency-interview-questions-base/)
 
 ### 多线程
-> 1. java中有几种方法可以实现一个线程？ 
-> 2. 如何停止一个正在运行的线程？
-> 3. notify()和notifyAll()有什么区别？
-> 4. sleep()和wait()有什么区别？
-> 5. 什么是Daemon线程？它有什么意义？
-> 6. java如何多线程之间的通讯与协作?
+> ##### 1. java中有几种方法可以实现一个线程？         
+   > 有两种方法可以实现一个线程：     
+    1. 实现Runnable接口并实现run方法，新建一个Thread对象，并将实现的参数对象作为参数传入。       
+    2. 继承Thread类
+```$xslt
+        public class MyThread implements Runnable{
+            @Override
+            public void run() {
+                System.out.println("Hello world");
+            }
+        
+            @Test
+            public void test(){
+                new Thread(new MyThread()).start();
+                new OtherThread().start();
+            }
+        
+            class OtherThread extends Thread{
+                @Override
+                public void run(){
+                    System.out.println("Hello world");
+                }
+            }
+        }
+
+```         
+   
+> ##### 2. 如何停止一个正在运行的线程？
+   > 有两种方法可以实现一个线程：
+
+> ##### 3. notify()和notifyAll()有什么区别？
+> ##### 4. sleep()和wait()有什么区别？
+> ##### 5. 什么是Daemon线程？它有什么意义？
+> ##### 6. java如何多线程之间的通讯与协作?
 
 ### 锁
 > 1. 什么是可重入锁ReentrantLock 
