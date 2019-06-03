@@ -13,7 +13,7 @@
 
 [duanzx]: https://github.com/duanzx/ifeve-note
 [001]: https://github.com/duanzx/ifeve-note/blob/master/note/20190527/target.md
-[002]: https://github.com/duanzx/ifeve-note/blob/master/note/20190527/target.md
+[002]: ./note/20190530/Cancellation.md
 [003]: ./note/20190530/JavaMemoryModelCookbook.md
 
      
