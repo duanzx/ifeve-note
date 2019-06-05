@@ -1,7 +1,8 @@
-## Java中局部变量类型推断编写风格指南 
+## (翻译)Java中局部变量类型推断编写风格指南 
+原文链接：[Style Guidelines for Local Variable Type Inference in Java](http://openjdk.java.net/projects/amber/LVTIstyle.html)        
 Stuart W.Marks  
 2018-03-22  
-原文链接：[Style Guidelines for Local Variable Type Inference in Java](http://openjdk.java.net/projects/amber/LVTIstyle.html)
+
 
 ### 简介
 Java SE 10引入了局部变量的类型推断。早先，所有的局部变量声明都需要在左侧声明明确的类型。
@@ -164,4 +165,41 @@ Java历来要求局部变量声明里要明确包含该类型，显然显式类�
 方法，而在第二个片段中使用中间变量的完整声明会是一个不好的选择。 和许多其他情况一样，正确使用var可能会涉及拿掉一些东西
 （显示类型）和加入一些东西（更好的变量名称，更好的代码结构）。         
  
- #### G5. 不用过分担心使用
+ #### G5. 不用过分担心"使用接口编程" 中局部变量的使用问题
+ Java编程中常见的习惯用法是构造具体类型的实例，但要将其分配给接口类型的变量。这将代码绑定到抽象上而不是具体实现上，为
+ 代码以后的维护保留了灵活性。
+    
+    //原始写法, list类型为接口List类型
+    List<String> list = new ArrayList<>()
+如果使用var,可以推断出list具体的实现类型ArrayList而不是接口类型List   
+ 
+    // 推断出list的类型是 ArrayList<String>.
+    var list = new ArrayList<String>(); 
+这里要再次重申一次，var只能用于局部变量。它不能用于推断字段类型，方法参数类型和方法返回类型。"使用接口编程"的原则在这些
+情况下仍然和以往一样重要。
+
+主要问题是使用该变量的代码可以形成对具体实现的依赖性。如果变量的初始化程序以后要改变，这可能导致其推断类型发生变化，在
+使用该变量的后续代码中产生异常或bug。
+
+如果，如指南G2中所建议的那样，局部变量的范围很小，可能影响后续代码的具体实现的"漏洞"是有限的。如果变量仅用于几行之外的
+代码，应该很容易避免这些问题或者缓解这些出现的问题。
+
+在这种特殊情况下，ArrayList只包含一些不在List上的方法，如ensureCapacity()和trimToSize()。这些方法不会影响到List,所以
+调用他们不会影响程序的正确性。这进一步降低了推断类型作为具体实现类型而不是接口类型的影响。 
+
+#### G6. 使用带有<>和泛型方法的var时候要小心
+var和<>功能允许您在可以从已存在的信息派生时，省略具体的类型信息。你能在同一个变量声明中使用它们吗？
+
+考虑一下以下代码：
+
+    PriorityQueue<Item> itemQueue = new PriorityQueue<Item>();
+这段代码可以使用var或<>重写，并且不会丢失类型信息:
+
+    // 正确：两个变量都可以声明为PriorityQueue<Item>类型
+    PriorityQueue<Item> itemQueue = new PriorityQueue<>();
+    var itemQueue = new PriorityQueue<Item>();    
+同时使用var和<>是合法的，但推断类型将会改变：
+
+    // 危险: 推断类型变成了 PriorityQueue<Object>
+    var itemQueue = new PriorityQueue<>();
+  
