@@ -1,4 +1,4 @@
-### JEP 286: 局部变量类型推断
+### (翻译)JEP 286: 局部变量类型推断
 原文链接：[JEP 286: Local-Variable Type Inference](http://openjdk.java.net/jeps/286)
 
     Author	Brian Goetz
