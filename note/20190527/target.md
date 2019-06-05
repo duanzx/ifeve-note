@@ -26,8 +26,10 @@
  允许开发人员忽略一些往往没有必要的局部变量类型的显式声明。这种功能将会被允许，举个例子，
  可以使用以下方式声明变量：
  
+ ```
         var list = new ArrayList<String>();  // 指定list变量为ArrayList<String>类型
         var stream = list.stream();          // 指定stream变量为Stream<String>类型
+```        
  这种处理方式将局限于可以初始化值的局部变量、增强的for循环中的索引、以及传统for循环内声明的变量；它不适用于
  方法形式、构造函数形式、方法返回类型、字段、catch形式或其他任意类型的变量声明。
  
@@ -54,23 +56,29 @@
 调用链的API变得容易得多，而这样的API(如 Streams)非常流行，这些都已经表明开发者已经习惯推断出中间类型。比如在下面的
 链式调用中：
 
+```
         int maxWeight = blocks.stream()
                       .filter(b -> b.getColor() == BLUE)
                       .mapToInt(Block::getWeight)
                       .max();
+```                      
 没有人会困扰到(或者注意到)中间类型Stream<Block> 和 IntStream，以及lambda表达式中变量b的类型，也不会在源程序中明确
 显示。    
 
 局部变量类型推断允许在结构不太紧密的API中产生类似的效果；局部变量基本都用在链式调用上，并从类型推断上获益，例如：
 
+```
         var path = Paths.get(fileName);
         var bytes = Files.readAllBytes(path);
+```        
 ### 描述  
 对于使用初始化值的局部变量声明、增强for循环里的索引、和在传统for循环中声明的索引变量，允许它们接受保留类型名称var来
 代替可见的变量类型：
 
+```
         var list = new ArrayList<String>(); // infers ArrayList<String>
         var stream = list.stream();         // infers Stream<String>
+```        
         
 标识符var不是关键字，而是一个保留类型名称。这意味着可以使用var作为变量、方法或包名称的代码不会受到影响；使用var作为
 类或接口名称的代码将受到影响（不过这些名称在实际情况中很少见，因为它们违反了通常的命名惯例）。
@@ -169,7 +177,8 @@ i)是否要推断这个类型, ii)拒绝这个表达式 ,iii)推断一个可见�
 
 我们已经通过在推断LHS时，使用简化的错误消息来缓解这种情况。
 例如：
-        
+
+```
         Main.java:81: error: cannot infer type for local 无法推断局部变量类型
         variable x
                 var x;
@@ -203,6 +212,7 @@ i)是否要推断这个类型, ii)拒绝这个表达式 ,iii)推断一个可见�
                 var k = { 1 , 2 };
                     ^
           (array initializer needs an explicit target-type) 初始化的数组需要一个明确的目标类型
+```          
           
 风险：来源不兼容（有可能已将var用作类型名称）  
     
