@@ -34,5 +34,100 @@ Java SE 10引入了局部变量的类型推断。早先，所有的局部变量�
  若干位置，此时使用var可能不是一个好的情况。而且，可能它还表明代码本身存在问题。
  
  #### P3. 代码的可读性不应该依赖于IDE
+ 代码通常在IDE中编写和读取，所以很容易依赖IDE的代码分析功能。对于类型声明，在任何地方使用var,都可以通过IDE指向一个变量来
+ 确定它的类型，但是为什么不这么做呢？
  
+ 这里有两个原因。代码经常在IDE外部读取。代码出现在IDE设施不可用的许多地方，例如文档中的片段，浏览互联网上的仓库或补丁文件
+ 。为了理解这些代码的作用，必须将代码导入IDE。这样做是适得其反的。
+ 
+ 第二个原因是即使是在IDE中读取代码时也是如此，通常需要明确的操作来查询IDE以获取有关变量的更多信息。例如，查询使用var声明
+ 的变量类型，可能必须将鼠标悬停在变量上并等待弹出信息，这可能只需要片刻时间，但是它会扰乱阅读流程。
+ 
+ 代码应该是自我暴露的，它的表面应该是可以理解的，无需工具的帮助。
+ 
+ #### P4. 显式类型是一种权衡
+Java历来要求局部变量声明里要明确包含该类型，显然显式类型可能非常有用，但它们有时候不是很重要，有时候还可以忽略。要求一个
+明确的类型可能还会混淆一些有用的信息。
+
+省略显式类型可以减少这种混淆，但只有在这种混淆不会损害其可理解性的情况下。这种类型不是向读者传达信息的唯一方式。其他方法
+包括变量的名称和初始化表达式。在确定是否可以将其中一个频道静音时，我们应该考虑所有可用的频道。
+
+### 指南
+
+#### G1. 选择提供有用信息的变量名称
+通常这是一个好习惯，但在var的背景下它更为重要。在一个var的声明中，可以使用变量的名称来传达有关变量含义和用法的信息。
+使用var替换显式类型的同时也要改进变量的名称。例如：
+
+    //原始写法
+    List<Customer> x = dbconn.executeQuery(query);
+    
+    //改进写法
+    var custList = dbconn.executeQuery(query);
+在这种情况下，无用的变量名已被替换为一个能够唤起变量类型的名称，该名称现在隐含在var的声明中。根据其逻辑结论对变量的类型
+进行编码，得出了"匈牙利表示法"。就像显式类型一样，这有时是有帮助的，有时候只是杂乱无章。在此示例中，名称custList表示正在
+返回List。这可能不重要。和显式类型不同，变量的名称有时可以更好地表达变量的角色或性质，比如"customers":
+
+    //原始写法    
+    try (Stream<Customer> result = dbconn.executeQuery(query)) {
+         return result.map(...)
+                      .filter(...)
+                      .findAny();
+     }
+    //改进写法
+    try (var customers = dbconn.executeQuery(query)) {
+        return customers.map(...)
+                        .filter(...)
+                        .findAny();
+    }
+
+#### G2.最小化局部变量的范围
+最小化局部变量的范围通常也是一个好的习惯。这种做法在Effective Java (第三版)，第57项中有所描述。 如果使用var，它会是额外
+助力。
+
+在下面的例子中，add方法明确地将特殊项添加到list集合的最后一个元素，所以它按照预期最后处理。
+
+    var items = new ArrayList<Item>(...);
+    items.add(MUST_BE_PROCESSED_LAST);
+    for (var item : items) ...
+现在假设为了删除重复的项目，程序员修改此代码以使用HashSet而不是ArrayList：
+
+    var items = new HashSet<Item>(...);
+    items.add(MUST_BE_PROCESSED_LAST);
+    for (var item : items) ...
+这段代码现在有个bug，    
+    
+
+
+ 
+ 
+ 
+ 
+ 
+局部变量通常在构造函数中进行初始化。正在构造的类的名称通常与左侧显示声明的类型重复。如果类型名称很长，就可以使用var提供
+简洁而不会丢失信息：
+
+    // 原始写法：
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    // 改进写法
+    var outputStream = new ByteArrayOutputStream();
+在初始化程序是方法调用的情况下，使用var也是合理的，例如静态工厂方法，而不是构造函数，并且其名称包含足够的类型信息：
+
+    //原始写法
+    BufferedReader reader = Files.newBufferedReader(...);
+    List<String> stringList = List.of("a", "b", "c");
+    // 改进写法
+    var reader = Files.newBufferedReader(...);
+    var stringList = List.of("a", "b", "c"); 
+在这些事例中，方法的名称强烈暗示其特定的返回类型，然后用于推断变量的类型。
+
+#### P4. 使用var将局部变量分解为链式或嵌套表达式
+考虑使用字符串集合并查找最常出现的字符串的代码，可能如下所示：
+    
+    return strings.stream()
+                   .collect(groupingBy(s -> s, counting()))
+                   .entrySet()
+                   .stream()
+                   .max(Map.Entry.comparingByValue())
+                   .map(Map.Entry::getKey);
+这段代码是正确的，       
  
