@@ -132,7 +132,7 @@ Java历来要求局部变量声明里要明确包含该类型，显然显式类�
     var stringList = List.of("a", "b", "c"); 
 在这些情况下，方法的名称强烈暗示其特定的返回类型，然后用于推断变量的类型。
 
-#### G4. 使用var将局部变量分解为链式或嵌套表达式
+#### G4. 使用var局部变量分解链式或嵌套表达式
 考虑使用字符串集合并查找最常出现的字符串的代码，可能如下所示：
     
     return strings.stream()
@@ -141,5 +141,27 @@ Java历来要求局部变量声明里要明确包含该类型，显然显式类�
                    .stream()
                    .max(Map.Entry.comparingByValue())
                    .map(Map.Entry::getKey);
-这段代码是正确的，       
+这段代码是正确的，但它可能令人困惑，因为它看起来像是一个单一的流管道。事实上，它是一个短暂的流，接着是第一个流结果生成
+的第二个流，然后是第二个流的可选结果映射后的流。表达此代码的最易读的方式是两个或三个语句；第一组实体放入一个Map,然后减少
+这个Map,然后从结果中提取出这个Key，如下所示：
+    
+    Map<String, Long> freqMap = strings.stream()
+                                       .collect(groupingBy(s -> s, counting()));
+    Optional<Map.Entry<String, Long>> maxEntryOpt = freqMap.entrySet()
+                                                           .stream()
+                                                           .max(Map.Entry.comparingByValue());
+    return maxEntryOpt.map(Map.Entry::getKey);
+但编写者可能会拒绝这样做，因为编写中间变量的类型似乎太过于繁琐，相反他们篡改了控制流程。使用var允许我们更自然地表达代码
+，而无需付出显式声明中间变量类型的高代价：
+
+    var freqMap = strings.stream()
+                         .collect(groupingBy(s -> s, counting()));
+    var maxEntryOpt = freqMap.entrySet()
+                             .stream()
+                             .max(Map.Entry.comparingByValue());
+    return maxEntryOpt.map(Map.Entry::getKey);
+有些人可能更倾向于第一个片段及其单个长的链式调用。但是，在某些条件下，最好分解长的方法链。对这些情况使用var是一种可行的
+方法，而在第二个片段中使用中间变量的完整声明会是一个不好的选择。 和许多其他情况一样，正确使用var可能会涉及拿掉一些东西
+（显示类型）和加入一些东西（更好的变量名称，更好的代码结构）。         
  
+ #### G5. 
