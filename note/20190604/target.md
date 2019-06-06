@@ -61,7 +61,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 使用var替换显式类型的同时也要改进变量的名称。例如：
 
     //原始写法
-    List<Customer> x = dbconn.executeQuery(query);
+    List<Customer&gt; x = dbconn.executeQuery(query);
     
     //改进写法
     var custList = dbconn.executeQuery(query);
@@ -71,7 +71,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 和显式类型不同，变量的名称有时可以更好地表达变量的角色或性质，比如"customers":
 
     //原始写法    
-    try (Stream<Customer> result = dbconn.executeQuery(query)) {
+    try (Stream<Customer&gt; result = dbconn.executeQuery(query)) {
          return result.map(...)
                       .filter(...)
                       .findAny();
@@ -89,19 +89,19 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 
 在下面的例子中，add方法正确地将特殊项添加到list集合的最后一个元素，所以它按照预期最后处理。
 
-    var items = new ArrayList<Item>(...);
+    var items = new ArrayList<Item&gt;(...);
     items.add(MUST_BE_PROCESSED_LAST);
     for (var item : items) ...
 现在假设为了删除重复的项目，程序员要修改此代码以使用HashSet而不是ArrayList：
 
-    var items = new HashSet<Item>(...);
+    var items = new HashSet<Item&gt;(...);
     items.add(MUST_BE_PROCESSED_LAST);
     for (var item : items) ...
 这段代码现在有个bug，因为Set没有定义迭代顺序。不过，程序员可能会立即修复这个bug，因为items变量的使用与其声明相邻。
 
 现在假设这段代码是一个大方法的一部分，相应地items变量具有很大的使用范围：
 
-    var items = new HashSet<Item>(...);
+    var items = new HashSet<Item&gt;(...);
     
     // ... 100 lines of code ...
     
@@ -110,7 +110,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 将ArrayList更改为HashSet的影响不再明显，因为使用items的代码与声明items的代码离得很远。这意味着上面所说的bug似乎可以存活
 更长时间。
 
-如果items已经明确声明为List<String>，还需要更改初始化程序将类型更改为Set<String>。这可能会提示程序员检查方法的其余部分
+如果items已经明确声明为List<String&gt;，还需要更改初始化程序将类型更改为Set<String&gt;。这可能会提示程序员检查方法的其余部分
 是否存在受此类更改影响的代码。(问题来了，他也可能不会检查)。如果使用var会消除这类影响，不过也可能会增加在此类代码中
 引入错误的风险。
 
@@ -129,7 +129,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 
     //原始写法
     BufferedReader reader = Files.newBufferedReader(...);
-    List<String> stringList = List.of("a", "b", "c");
+    List<String&gt; stringList = List.of("a", "b", "c");
     // 改进写法
     var reader = Files.newBufferedReader(...);
     var stringList = List.of("a", "b", "c"); 
@@ -139,7 +139,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 考虑使用字符串集合并查找最常出现的字符串的代码，可能如下所示：
     
     return strings.stream()
-                   .collect(groupingBy(s -> s, counting()))
+                   .collect(groupingBy(s -&gt; s, counting()))
                    .entrySet()
                    .stream()
                    .max(Map.Entry.comparingByValue())
@@ -148,8 +148,8 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
 的第二个流，然后是第二个流的可选结果映射后的流。表达此代码的最易读的方式是两个或三个语句；
 第一组实体放入一个Map,然后第二组过滤这个Map，第三组从Map结果中提取出Key，如下所示：
     
-    Map<String, Long> freqMap = strings.stream()
-                                       .collect(groupingBy(s -> s, counting()));
+    Map<String, Long&gt; freqMap = strings.stream()
+                                       .collect(groupingBy(s -&gt; s, counting()));
     Optional<Map.Entry<String, Long>> maxEntryOpt = freqMap.entrySet()
                                                            .stream()
                                                            .max(Map.Entry.comparingByValue());
@@ -163,7 +163,7 @@ Java历来要求局部变量声明里要明确包含显式类型，显然显式�
                              .stream()
                              .max(Map.Entry.comparingByValue());
     return maxEntryOpt.map(Map.Entry::getKey);
-有些人可能更倾向于第一段代码及其单个长的链式调用。但是，在某些条件下，最好分解长的方法链。对这些情况使用var是一种可行的
+有些人可能更倾向于第一段代码中单个长的链式调用。但是，在某些条件下，最好分解长的方法链。对这些情况使用var是一种可行的
 方法，而在第二个段中使用中间变量的完整声明会是一个不好的选择。 和许多其他情况一样，正确使用var可能会涉及到扔掉一些东西
 （显示类型）和加入一些东西（更好的变量名称，更好的代码结构）。         
  
