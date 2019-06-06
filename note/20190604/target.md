@@ -1,7 +1,8 @@
-## (翻译)Java中局部变量类型推断编写风格指南 
+## (翻译)Java中使用var声明局部变量指南 
 原文链接：[Style Guidelines for Local Variable Type Inference in Java](http://openjdk.java.net/projects/amber/LVTIstyle.html)        
 Stuart W.Marks  
-2018-03-22  
+2018-03-22      
+译者：段振兴  
 
 
 ### 简介
