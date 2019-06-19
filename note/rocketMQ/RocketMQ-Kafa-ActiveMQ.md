@@ -107,9 +107,3 @@ kafka使用异步刷盘，异步复制/同步复制
        <td>Web管理页面和terminal命令</td>   
     </tr>
 </table>
-
-#### 如何在RocketMQ中支持更多的消息队列
-##### Kafka的分区设计
-
-
-
